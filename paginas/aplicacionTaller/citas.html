@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citas - Taller</title>
+  <link rel="stylesheet" href="{% static 'css/citas.css' %}">
+  <script defer src="{% static 'js/citas.js' %}"></script>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="/">Inicio</a>
+    <a href="/citas/">Citas</a>
+    <a href="#">Servicios</a>
+    <a href="/login/">Iniciar Sesión</a>
+  </div>
+
+  <div class="card">
+    <h2>Listado de Citas / Vehículos a Reparar</h2>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Placa</th>
+            <th>Marca / Modelo</th>
+            <th>Año</th>
+            <th>Propietario</th>
+            <th>Fecha Cita</th>
+            <th>Motivo</th>
+            <th>Estado</th>
+            <th>Costo Est.</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-citas">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>

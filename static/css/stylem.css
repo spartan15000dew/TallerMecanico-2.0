@@ -1,0 +1,113 @@
+/* ======== ESTILOS GENERALES ======== */
+body {
+    background-color: #1f2a38;
+    color: #ecf0f1;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* ======== BARRA SUPERIOR ======== */
+.top-bar {
+    background-color: #2c3e50;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+    gap: 15px;
+    border-bottom: 2px solid #f39c12;
+}
+
+.top-bar a {
+    color: #ecf0f1;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.top-bar a:hover {
+    background-color: #f39c12;
+    color: #1f2a38;
+}
+
+.user-info {
+    color: #f39c12;
+    font-weight: bold;
+    margin-left: auto; 
+}
+
+/* ======== CONTENIDO PRINCIPAL ======== */
+.content {
+    padding: 40px;
+    text-align: center;
+}
+
+.content h1 {
+    color: #f39c12;
+    margin-bottom: 20px;
+}
+
+/* ======== SECCIÓN DE BIENVENIDA ======== */
+.user-welcome, .guest-welcome {
+    margin-top: 30px;
+}
+
+.user-welcome h2 {
+    color: #f39c12;
+    margin-bottom: 15px;
+}
+
+.user-welcome p, .guest-welcome p {
+    color: #bdc3c7;
+    margin-bottom: 25px;
+    font-size: 1.1em;
+}
+
+/* ======== BOTONES DEL MENÚ ======== */
+.menu-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap; 
+    margin-top: 25px;
+}
+
+.menu-button {
+    background-color: #f39c12;
+    color: #1f2a38;
+    padding: 15px 25px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.menu-button:hover {
+    background-color: #e67e22;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+}
+
+
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .user-info {
+        margin-left: 0;
+    }
+    
+    .menu-options {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .menu-button {
+        width: 200px;
+    }
+}

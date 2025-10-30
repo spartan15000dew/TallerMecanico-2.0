@@ -1,0 +1,196 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #2c3e50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #ecf0f1; 
+}
+
+.login-container {
+    background-color: #34495e;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); 
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border: 2px solid #f39c12; 
+}
+
+.login-header h1 {
+    color: #f39c12;
+    margin-bottom: 10px;
+    font-size: 2.2em;
+}
+
+.login-header p {
+    color: #bdc3c7; 
+    margin-bottom: 30px;
+    font-size: 0.9em;
+}
+
+/* Mensajes de éxito y error */
+.success-message {
+    background-color: #27ae60; 
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: none; 
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 0.85em;
+    margin-top: 5px;
+    display: none;
+}
+
+/* Formulario */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #ecf0f1;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    border: 1px solid #7f8c8d;
+    border-radius: 5px;
+    background-color: #2c3e50; 
+    color: #ecf0f1;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+    border-color: #f39c12;
+    outline: none;
+}
+
+.form-group input.error {
+    border-color: #e74c3c;
+}
+
+/* Checkbox */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    justify-content: flex-start;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 10px;
+    accent-color: #f39c12;
+}
+
+.checkbox-group label {
+    font-size: 0.9em;
+    color: #bdc3c7;
+}
+
+/* Botón de login */
+.login-button {
+    background-color: #f39c12; 
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.login-button:hover {
+    background-color: #e67e22; 
+    transform: translateY(-2px); 
+}
+
+.login-button:disabled {
+    background-color: #7f8c8d; 
+    cursor: not-allowed;
+}
+
+/* Enlace de contraseña olvidada */
+.forgot-password {
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+
+.forgot-password a {
+    color: #f39c12; 
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.forgot-password a:hover {
+    color: #e67e22; 
+    text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .login-container {
+        margin: 20px;
+        padding: 30px;
+    }
+
+    .login-header h1 {
+        font-size: 1.8em;
+    }
+
+    .login-button {
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+}
+
+
+/* Estilos para la selección de tipo de usuario en el login */
+.type-selection {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.type-button {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.type-button:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.type-button:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.type-button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+

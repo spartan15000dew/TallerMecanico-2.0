@@ -1,0 +1,93 @@
+body {
+    background-color: #1e293b;
+    color: #f1f5f9;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background-color: #0f172a;
+    padding: 40px;
+    border-radius: 12px;
+    width: 350px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+h1 {
+    text-align: center;
+    color: #f59e0b;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    color: #f59e0b;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #f59e0b;
+    border-radius: 6px;
+    background-color: #1e293b;
+    color: white;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #f59e0b;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #111;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #fbbf24;
+}
+
+p {
+    text-align: center;
+    margin-top: 10px;
+}
+
+a {
+    color: #f59e0b;
+    text-decoration: none;
+}
+
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0; 
+}
+
+/* Estilo base para cualquier mensaje */
+.message {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-align: center; 
+}
+
+/* Mensaje de ERROR (rojo) */
+.message.error {
+    background-color: #3f2222; 
+    color: #fecaca;           
+    border-color: #ef4444;    
+}
