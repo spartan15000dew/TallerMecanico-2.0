@@ -29,3 +29,9 @@ class Mecanico(models.Model):
 
     def __str__(self):
         return f"{self.usuario.first_name} {self.usuario.last_name} - {self.especialidad}"
+    
+class Historial(models.Model):
+    detaller_trabajo = (models.Model)
+    costo_final = (models.Model)
+    fecha_realizacion = (models.Model)
+    Mecanico_id_mecanico = (models.Model)
