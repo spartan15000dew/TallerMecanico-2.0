@@ -35,3 +35,9 @@ class Historial(models.Model):
     costo_final = (models.Model)
     fecha_realizacion = (models.Model)
     Mecanico_id_mecanico = (models.Model)
+
+class Vehiculo(models.Model):
+    id_vehiculo = models.IntegerField()
+    patente = models.CharField(max_length=50)
+    modelo = models.CharField(max_length=30)
+    anio = models.IntegerField(max_length=20)
