@@ -41,3 +41,9 @@ class Vehiculo(models.Model):
     patente = models.CharField(max_length=50)
     modelo = models.CharField(max_length=30)
     anio = models.IntegerField(max_length=20)
+
+class Citas(models.Model):
+    id_citas = (models.Model)
+    fecha = (models.Model)
+    estado = (models.Model)
+    Vehiculo_id_vehiculo = (models.Model)
