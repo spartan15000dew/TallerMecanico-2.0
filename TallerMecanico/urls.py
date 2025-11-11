@@ -18,16 +18,13 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from aplicacionTaller import views
-from aplicacionTaller.views import (
-    renderLogin,
-)
 
 urlpatterns = [
     # Panel de administración
     path('admin/', admin.site.urls, name='admin'),
 
     # Autenticación
-    path('login/', renderLogin, name='login'),
+    path('login/', views.renderLogin, name='login'),
     path('registro/', views.registro_view, name='registro'),
     path('logout/', views.logout_view, name='logout'),
 

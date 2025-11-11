@@ -78,7 +78,7 @@ def registro_view(request):
             cliente_form = FormularioCliente(prefix="cliente")
             mecanico_form = FormularioMecanico(prefix="mecanico")
 
-    return render(request, 'aplicacionTaller/registro.html', {
+    return render(request, 'registro.html', {
         'user_form': user_form,
         'cliente_form': cliente_form,
         'mecanico_form': mecanico_form,
@@ -97,7 +97,7 @@ def renderLogin(request):
             return redirect('menu') 
         else:
             messages.error(request, "Usuario o contraseña incorrectos")
-    return render(request, 'aplicacionTaller/login.html')
+    return render(request, 'login.html')
 
 #VISTA DE MENÚ
 def rendermMenu(request):
@@ -113,7 +113,7 @@ def rendermMenu(request):
             contexto['rol'] = 'administrador'
     else:
         return redirect('login') 
-    return render(request,"aplicacionTaller/menu.html", contexto)
+    return render(request,"menu.html", contexto)
 
 #VISTA DE LOGOUT
 def logout_view(request):
@@ -123,12 +123,12 @@ def logout_view(request):
 
 #OTRAS VISTAS ESTÁTICAS
 def renderCitas(request):
-    return render(request,"aplicacionTaller/citas.html")
+    return render(request,"citas.html")
 def servicios_base(request):
-    return render(request, "aplicacionTaller/servicios/Base_servicios.html")
+    return render(request, "servicios/Base_servicios.html")
 def cliente(request):
-    return render(request, "aplicacionTaller/servicios/Cliente_servicios.html")
+    return render(request, "servicios/Cliente_servicios.html")
 def administrador(request):
-    return render(request, "aplicacionTTaller/servicios/Administrador_servicios.html")
+    return render(request, "servicios/Administrador_servicios.html")
 def mecanico(request):
-    return render(request, "aplicacionTaller/servicios/Mecanico_servicios.html")
+    return render(request, "servicios/Mecanico_servicios.html")
