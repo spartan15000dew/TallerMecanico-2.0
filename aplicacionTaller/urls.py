@@ -1,24 +1,9 @@
-"""
-URL configuration for TallerMecanico project.
+from django.urls import path
+from . import views
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.urls import path, include
-from aplicacionTaller import views
+app_name = "aplicacionTaller"
 
 urlpatterns = [
-    path("", include("aplicacionTaller.urls")),
     # --- Autenticación y Menú ---
     path('', views.rendermMenu, name='menu'), # Página principal
     path('registro/', views.registro_view, name='registro'),
@@ -40,8 +25,4 @@ urlpatterns = [
 
     # --- Vista General de Citas (Reemplaza la estática) ---
     path('citas/', views.mis_citas, name='mis_citas'),
-    
-    # --- Vistas estáticas anteriores (ahora redirigidas o eliminadas) ---
-    # La vista 'citas' antigua es reemplazada por 'mis_citas'
-    # Las vistas 'cliente', 'mecanico', 'administrador' son reemplazadas por los 'paneles'
 ]

@@ -1,0 +1,62 @@
+{% extends "servicios/Base_servicios.html" %}
+
+{% block title %}Gestión de Citas{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="module">
+        <h2>Listado de Citas</h2>
+        
+        {% if es_cliente %}
+            <p>Mostrando todas sus citas solicitadas.</p>
+        {% elif es_mecanico %}
+            <p>Mostrando citas pendientes y las asignadas a usted.</p>
+        {% elif user.is_staff %}
+            <p>Mostrando todas las citas del sistema (Vista de Admin).</p>
+        {% endif %}
+
+        {% if citas %}
+            <table class="citas-tabla">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha y Hora</th>
+                        <th>Vehículo (Patente)</th>
+                        <th>Cliente</th>
+                        <th>Estado</th>
+                        <th>Mecánico</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in citas %}
+                    <tr>
+                        <td>{{ c.id }}</td>
+                        <td>{{ c.fecha_hora|date:"d/m/Y H:i" }}</td>
+                        <td>{{ c.vehiculo.patente }}</td>
+                        <td>{{ c.vehiculo.cliente.usuario.first_name }}</td>
+                        <td>
+                            <span class="estado-{{ c.estado|lower|slugify }}">{{ c.get_estado_display }}</span>
+                        </td>
+                        <td>{{ c.mecanico_asignado.usuario.first_name|default:"Sin asignar" }}</td>
+                        <td>
+                            {% if es_mecanico and c.estado == 'Pendiente' %}
+                                <a href="{% url 'detalle_cita' c.pk %}" class="button-small">Revisar</a>
+                            {% elif es_mecanico and c.mecanico_asignado == user.perfil_mecanico %}
+                                <a href="{% url 'detalle_cita' c.pk %}" class="button-small">Gestionar</a>
+                            {% elif es_cliente %}
+                                (Ver)
+                            {% elif user.is_staff %}
+                                <a href="/admin/aplicacionTaller/cita/{{ c.pk }}/change/" class="button button-small" target="_blank">Admin</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No se encontraron citas.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

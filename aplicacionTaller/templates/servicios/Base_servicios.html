@@ -1,38 +1,68 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
+
+    <meta charset="UTF-R">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Panel de Servicios{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/stylem.css' %}">
+
+    <title>Menú Principal - Taller Mecánico</title>
+
+</head>
+    
+    <!-- Cargar CSS -->
     <link rel="stylesheet" href="{% static 'css/servicios.css' %}">
 </head>
 <body>
-    <header>
-        <h1>Taller Mecánico - Panel de Servicios</h1>
+
+    <!-- Esta es la barra de navegación superior que verán todas las páginas -->
+    <header class="top-bar">
+        <a href="{% url 'menu' %}" class="logo">Taller Mecanico</a>
+        <nav class="navigation">
+            
+            {% if user.is_authenticated %}
+                <!-- Enlaces para usuarios logueados -->
+                <a href="{% url 'menu' %}">Inicio</a>
+                <a href="{% url 'mis_citas' %}">Mis Citas</a>
+                
+                {% if rol == 'cliente' %}
+                    <a href="{% url 'gestionar_vehiculos' %}">Mis Vehículos</a>
+                {% endif %}
+
+                <span class="user-info">
+                    {{ user.first_name|default:user.username }} ({{ rol|title }})
+                </span>
+                <a href="{% url 'logout' %}" class="button button-logout">Cerrar Sesión</a>
+            
+            {% else %}
+                <!-- Enlaces para invitados (no logueados) -->
+                <a href="{% url 'login' %}" class="button">Iniciar Sesión</a>
+                <a href="{% url 'registro' %}" class="button button-secondary">Registrarse</a>
+            {% endif %}
+        </nav>
     </header>
 
+    <!-- Contenedor principal donde se cargará el contenido de las otras plantillas -->
     <main class="container">
+        
+        <!-- Bloque para mostrar mensajes de error o éxito -->
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Aquí se inserta el contenido de 'menu.html', 'panel_cliente.html', etc. -->
         {% block content %}
-
-        <div class="module">
-            <h2>Cliente</h2>
-            <p>Accede a tus servicios, historial de reparaciones y agendamientos de forma rápida y segura.</p>
-            <a href="http://127.0.0.1:8000/servicios/cliente/">Ingresar</a>
-        </div>
-
-        <div class="module">
-            <h2>Administrador</h2>
-            <p>Gestiona los usuarios, controla los módulos del sistema y administra los reportes del taller.</p>
-            <a href="http://127.0.0.1:8000/servicios/administrador/">Panel admin</a>
-        </div>
-
-        <div class="module">
-            <h2>Mecánico</h2>
-            <p>Consulta las órdenes asignadas, actualiza estados de servicio y revisa detalles de reparaciones.</p>
-            <a href="http://127.0.0.1:8000/servicios/mecanico/">Acceder</a>
-        </div>
+        
         {% endblock %}
     </main>
+
 </body>
 </html>

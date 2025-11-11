@@ -77,11 +77,11 @@ class VehiculoAdmin(admin.ModelAdmin):
 
 @admin.register(Cita)
 class CitaAdmin(admin.ModelAdmin):
-    list_display = ('get_vehiculo_patente', 'fecha', 'estado')
-    list_filter = ('estado', 'fecha')
+    list_display = ('get_vehiculo_patente', 'fecha_hora', 'estado')
+    list_filter = ('estado', 'fecha_hora')
     search_fields = ('vehiculo__patente', 'vehiculo__marca')
     raw_id_fields = ('vehiculo',)
-    date_hierarchy = 'fecha'
+    date_hierarchy = 'fecha_hora'
 
     @admin.display(description='Vehículo (Patente)')
     def get_vehiculo_patente(self, obj):

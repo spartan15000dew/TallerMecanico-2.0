@@ -1,0 +1,49 @@
+{% extends "servicios/Base_servicios.html" %}
+
+{% block title %}Gestionar Mis Vehículos{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="module">
+        <h2>Añadir Nuevo Vehículo</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="button">Registrar Vehículo</button>
+        </form>
+    </div>
+
+    <div class="module">
+        <h2>Mis Vehículos Registrados</h2>
+        {% if mis_vehiculos %}
+            <table class="citas-tabla">
+                <thead>
+                    <tr>
+                        <th>Patente</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Año</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in mis_vehiculos %}
+                    <tr>
+                        <td>{{ v.patente }}</td>
+                        <td>{{ v.marca }}</td>
+                        <td>{{ v.modelo }}</td>
+                        <td>{{ v.año }}</td>
+                        <td>
+                            <a href="#">(Editar)</a> <!-- Funcionalidad de editar pendiente -->
+                            <a href="#">(Eliminar)</a> <!-- Funcionalidad de eliminar pendiente -->
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Aún no tienes vehículos registrados.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

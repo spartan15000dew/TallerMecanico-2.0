@@ -1,0 +1,26 @@
+{% extends "servicios/Base_servicios.html" %}
+
+{% block title %}Panel del Administrador{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="module">
+        <h2>Panel de Administración</h2>
+        <p>Bienvenido, {{ user.username }}.</p>
+                    <a href="/admin/" class="button" target="_blank">Admin de Django</a>
+    </div>
+
+    <div class="module">
+        <h2>Resumen del Sistema</h2>
+        <ul>
+            <li>
+                <strong>Mecánicos Pendientes de Aprobación: {{ mecanicos_pendientes }}</strong>
+                {% if mecanicos_pendientes > 0 %}
+                    <a href="{% url 'admin:aplicacionTaller_mecanico_changelist' %}?aprobado__exact=0">(Ver y Aprobar)</a>
+                {% endif %}
+            </li>
+            <!-- Aquí puedes añadir más estadísticas -->
+        </ul>
+    </div>
+</div>
+{% endblock %}

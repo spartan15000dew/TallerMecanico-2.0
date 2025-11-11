@@ -1,0 +1,30 @@
+{% extends "servicios/Base_servicios.html" %}
+
+{% block title %}Agendar Nueva Cita{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="module">
+        <h2>Solicitar una Cita</h2>
+        <p>Por favor, complete el formulario para enviar su solicitud. Un mecánico la revisará y aprobará a la brevedad.</p>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <p class="message {{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% if form.vehiculo.queryset.exists %}
+                {{ form.as_p }}
+                <button type="submit" class="button">Enviar Solicitud de Cita</button>
+            {% else %}
+                <p><strong>Debe registrar un vehículo antes de poder agendar una cita.</strong></p>
+                <a href="{% url 'gestionar_vehiculos' %}" class="button">Registrar mi primer vehículo</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

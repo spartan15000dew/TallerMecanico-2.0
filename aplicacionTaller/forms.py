@@ -1,9 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Cliente, Mecanico, Marca, telefono_validador
+from .models import Cliente, Mecanico, Marca, Vehiculo, Cita, telefono_validador
 
 class FormularioUsuario(forms.ModelForm):
-    # El formulario de usuario base para el registro
     password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
     confirm_password = forms.CharField(widget=forms.PasswordInput, label="Confirmar Contraseña")
 
@@ -21,14 +20,12 @@ class FormularioUsuario(forms.ModelForm):
         }
 
     def clean_email(self):
-        # Validación para asegurar que el email sea único
         email = self.cleaned_data.get('email')
         if email and User.objects.filter(email=email).exists():
             raise forms.ValidationError("Este correo electrónico ya está en uso.")
         return email
 
     def clean(self):
-        # Validación para confirmar la contraseña
         cleaned_data = super().clean()
         p1 = cleaned_data.get('password')
         p2 = cleaned_data.get('confirm_password')
@@ -38,7 +35,6 @@ class FormularioUsuario(forms.ModelForm):
 
 
 class FormularioCliente(forms.ModelForm):
-    # Formulario para los campos *adicionales* del Cliente
     telefono = forms.CharField(validators=[telefono_validador], label="Teléfono")
 
     class Meta:
@@ -50,7 +46,6 @@ class FormularioCliente(forms.ModelForm):
 
 
 class FormularioMecanico(forms.ModelForm):
-    # Formulario para los campos *adicionales* del Mecánico
     telefono = forms.CharField(validators=[telefono_validador], label="Teléfono")
 
     marcas = forms.ModelMultipleChoiceField(
@@ -63,3 +58,51 @@ class FormularioMecanico(forms.ModelForm):
     class Meta:
         model = Mecanico
         fields = ['telefono', 'marcas']
+
+
+
+
+class VehiculoForm(forms.ModelForm):
+    """Formulario para que el cliente añada/edite sus vehículos."""
+    class Meta:
+        model = Vehiculo
+        fields = ['patente', 'marca', 'modelo', 'año']
+        labels = {
+            'patente': 'Patente (Placa)',
+            'marca': 'Marca (Ej: Volvo, Scania)',
+            'modelo': 'Modelo (Ej: FH16, R500)',
+            'año': 'Año del modelo',
+        }
+        widgets = {
+            'año': forms.NumberInput(attrs={'min': 1980, 'max': 2025}),
+        }
+
+class CitaForm(forms.ModelForm):
+    """Formulario para que el cliente solicite una cita."""
+    
+
+    fecha_hora = forms.DateTimeField(
+        label="Fecha y Hora Solicitada",
+        widget=forms.DateTimeInput(
+            attrs={'type': 'datetime-local'},
+            format='%Y-%m-%dT%H:%M'
+        )
+    )
+    
+    class Meta:
+        model = Cita
+        fields = ['vehiculo', 'fecha_hora', 'motivo']
+        widgets = {
+            'motivo': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Describa el problema o el servicio que necesita...'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        user = kwargs.pop('user', None)
+        super(CitaForm, self).__init__(*args, **kwargs)
+        
+        if user and hasattr(user, 'perfil_cliente'):
+            self.fields['vehiculo'].queryset = Vehiculo.objects.filter(cliente=user.perfil_cliente)
+            self.fields['vehiculo'].label = "Seleccione su Vehículo"
+        else:
+            self.fields['vehiculo'].queryset = Vehiculo.objects.none()

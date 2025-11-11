@@ -1,0 +1,78 @@
+{% extends "servicios/Base_servicios.html" %}
+
+{% block title %}Panel del Mecánico{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="module">
+        <h2>Bienvenido, Mecánico {{ user.first_name }}</h2>
+        <p>Aquí puedes ver las solicitudes de citas pendientes y las citas que tienes asignadas.</p>
+    </div>
+
+    <div class="module">
+        <h2>Citas Pendientes de Aprobación</h2>
+        {% if citas_pendientes %}
+            <table class="citas-tabla">
+                <thead>
+                    <tr>
+                        <th>Fecha Solicitada</th>
+                        <th>Vehículo</th>
+                        <th>Motivo</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in citas_pendientes %}
+                    <tr>
+                        <td>{{ c.fecha_hora|date:"d/m/Y H:i" }}</td>
+                        <td>{{ c.vehiculo.patente }} ({{c.vehiculo.marca}})</td>
+                        <td>{{ c.motivo|truncatewords:10 }}</td>
+                        <td>
+                            <!-- Enlace a la vista de detalle para aprobar/rechazar -->
+                            <a href="{% url 'detalle_cita' c.pk %}" class="button-small">Ver Detalles</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No hay citas pendientes de aprobación.</p>
+        {% endif %}
+    </div>
+    
+    <div class="module">
+        <h2>Mis Citas Asignadas (En Progreso)</h2>
+        {% if citas_asignadas %}
+            <table class="citas-tabla">
+                <thead>
+                    <tr>
+                        <th>Fecha Programada</th>
+                        <th>Vehículo</th>
+                        <th>Cliente</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in citas_asignadas %}
+                    <tr>
+                        <td>{{ c.fecha_hora|date:"d/m/Y H:i" }}</td>
+                        <td>{{ c.vehiculo.patente }}</td>
+                        <td>{{ c.vehiculo.cliente.usuario.get_full_name }}</td>
+                        <td>
+                            <span class="estado-{{ c.estado|lower|slugify }}">{{ c.get_estado_display }}</span>
+                        </td>
+                        <td>
+                            <!-- Enlace para ver/actualizar estado -->
+                            <a href="{% url 'detalle_cita' c.pk %}" class="button-small">Actualizar Estado</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No tienes citas asignadas en este momento.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

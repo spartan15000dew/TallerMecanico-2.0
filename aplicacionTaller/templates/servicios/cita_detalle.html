@@ -1,0 +1,63 @@
+{% extends "servicios/Base_servicios.html" %}
+
+{% block title %}Detalle de Cita {{ cita.id }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="module">
+        <h2>Detalles de la Cita #{{ cita.id }}</h2>
+        <table class="tabla-detalle">
+            <tr>
+                <th>Cliente:</th>
+                <td>{{ cita.vehiculo.cliente.usuario.get_full_name }} ({{ cita.vehiculo.cliente.telefono }})</td>
+            </tr>
+            <tr>
+                <th>Vehículo:</th>
+                <td>{{ cita.vehiculo.patente }} - {{ cita.vehiculo.marca }} {{ cita.vehiculo.modelo }} ({{ cita.vehiculo.año }})</td>
+            </tr>
+            <tr>
+                <th>Fecha Solicitada:</th>
+                <td>{{ cita.fecha_hora|date:"d/m/Y H:i" }}</td>
+            </tr>
+            <tr>
+                <th>Estado Actual:</th>
+                <td><span class="estado-{{ cita.estado|lower|slugify }}">{{ cita.get_estado_display }}</span></td>
+            </tr>
+            {% if cita.mecanico_asignado %}
+            <tr>
+                <th>Mecánico Asignado:</th>
+                <td>{{ cita.mecanico_asignado.usuario.get_full_name }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <th>Motivo / Síntomas:</th>
+                <td>{{ cita.motivo|linebreaks }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="module">
+        <h2>Acciones de Mecánico</h2>
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% if cita.estado == 'Pendiente' %}
+                <p>¿Desea aceptar esta cita y asignársela a usted mismo?</p>
+                <button type="submit" name="accion_aprobar" class="button button-success">Aprobar y Asignar</button>
+                <button type="submit" name="accion_rechazar" class="button button-danger">Rechazar Cita</button>
+            
+            {% elif cita.estado == 'Aprobada' or cita.estado == 'En Progreso' %}
+                <p>Gestionar el estado de esta cita asignada a usted:</p>
+                <!-- Aquí podrías añadir un botón para "Iniciar Trabajo" si está 'Aprobada' -->
+                <button type="submit" name="accion_completar" class="button button-success">Marcar como Completada</button>
+                <button type="submit" name="accion_rechazar" class="button button-danger">Cancelar/Rechazar Cita</button>
+            
+            {% else %}
+                <p>Esta cita ya ha sido {{ cita.get_estado_display }}. No hay más acciones disponibles.</p>
+            {% endif %}
+            
+            <a href="{% url 'panel_mecanico' %}" style="margin-top: 10px; display: inline-block;">Volver al Panel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

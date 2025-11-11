@@ -1,0 +1,58 @@
+{% extends "servicios/Base_servicios.html" %}
+
+{% block title %}Panel del Cliente{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="module">
+        <h2>Bienvenido, {{ user.first_name }}</h2>
+        <p>Desde aquí puedes administrar tus vehículos y agendar nuevas citas de servicio.</p>
+        <a href="{% url 'gestionar_vehiculos' %}" class="button">Gestionar Mis Vehículos</a>
+        <a href="{% url 'agendar_cita' %}" class="button">Agendar Nueva Cita</a>
+    </div>
+
+    <div class="module">
+        <h2>Mis Vehículos Registrados</h2>
+        {% if vehiculos %}
+            <ul>
+                {% for v in vehiculos %}
+                <li><strong>{{ v.patente }}</strong> - {{ v.marca }} {{ v.modelo }} ({{ v.año }})</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aún no has registrado ningún vehículo.</p>
+            <a href="{% url 'gestionar_vehiculos' %}">Registrar mi primer vehículo</a>
+        {% endif %}
+    </div>
+    
+    <div class="module">
+        <h2>Mis Citas</h2>
+        {% if citas %}
+            <table class="citas-tabla">
+                <thead>
+                    <tr>
+                        <th>Fecha y Hora</th>
+                        <th>Vehículo</th>
+                        <th>Motivo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in citas %}
+                    <tr>
+                        <td>{{ c.fecha_hora|date:"d/m/Y H:i" }}</td>
+                        <td>{{ c.vehiculo.patente }}</td>
+                        <td>{{ c.motivo|truncatewords:10 }}</td>
+                        <td>
+                            <span class="estado-{{ c.estado|lower|slugify }}">{{ c.get_estado_display }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No tienes citas programadas.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
