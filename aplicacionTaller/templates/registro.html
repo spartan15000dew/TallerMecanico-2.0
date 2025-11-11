@@ -3,12 +3,30 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro</title>
+    <title>Registro - Taller Mecánico</title>
     <link rel="stylesheet" href="{% static 'css/registro.css' %}">
+    <!-- Asegúrate de tener un CSS para esto, o los checkboxes se verán mal -->
+    <style>
+        /* Estilos básicos para los checkboxes del formulario de mecánico */
+        #datos_mecanico ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+        }
+        #datos_mecanico li {
+            display: block;
+            margin-bottom: 5px;
+        }
+        #datos_mecanico label {
+            display: inline-block;
+            margin-left: 5px;
+            font-weight: normal;
+        }
+    </style>
 </head>
 <body>
     <div class="register-container">
-        <h1>Registro</h1>
+        <h1>Registro de Usuario</h1>
 
         {% if messages %}
             <div class="messages">
@@ -31,18 +49,22 @@
                 </option>
             </select>
 
+            <!-- Este formulario es común para ambos -->
             <div id="datos_cuenta">
                 <h3>Datos de la Cuenta</h3>
                 {{ user_form.as_p }}
             </div>
 
+            <!-- Formulario específico para Cliente -->
             <div id="datos_cliente" style="{% if tipo_usuario_seleccionado != 'Cliente' %}display:none;{% endif %}">
                 <h3>Datos del Cliente</h3>
                 {{ cliente_form.as_p }}
             </div>
 
+            <!-- Formulario específico para Mecánico -->
             <div id="datos_mecanico" style="{% if tipo_usuario_seleccionado != 'Mecanico' %}display:none;{% endif %}">
                 <h3>Datos del Mecánico</h3>
+                <!-- {{ mecanico_form.as_p }} mostrará los checkboxes de marcas -->
                 {{ mecanico_form.as_p }}
             </div>
 
@@ -52,6 +74,7 @@
         <p><a href="{% url 'login' %}">Volver al inicio de sesión</a></p>
     </div>
 
+<!-- Cargar el JS para ocultar/mostrar formularios -->
 <script src="{% static 'js/registro.js' %}"></script>
 </body>
 </html>

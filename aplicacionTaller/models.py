@@ -1,60 +1,62 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 
 
-class Login(models.Model):
+telefono_validador = RegexValidator(
+    regex=r'^\+?\d{7,15}$', 
+    message="Ingrese un número de teléfono válido (7-15 dígitos, opcional +)."
+)
 
-    user = models.CharField(max_length=25, unique=True)
-    contrasenia = models.CharField(max_length=100)
-    rol = models.CharField(max_length=10)
+
+class Marca(models.Model):
+    nombre = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
-        return f"{self.user} ({self.rol})"
+        return self.nombre
+
 
 
 
 class Cliente(models.Model):
 
-    nombre = models.CharField(max_length=45)
-    apellido = models.CharField(max_length=45)
-    telefono = models.IntegerField()
-    email = models.EmailField(max_length=60) 
-    direccion = models.CharField(max_length=45)
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='perfil_cliente')
     
-    login = models.OneToOneField(Login, on_delete=models.CASCADE)
 
+    telefono = models.CharField(max_length=15, validators=[telefono_validador])
+    direccion = models.CharField(max_length=100)
+    
     def __str__(self):
-        return f"{self.nombre} {self.apellido}"
+
+        return f"Cliente: {self.usuario.get_full_name()} ({self.usuario.username})"
 
 class Mecanico(models.Model):
 
-    nombre = models.CharField(max_length=45)
-    especialidad = models.CharField(max_length=45)
-    telefono = models.IntegerField()
-    ESPECIALIDAD_CHOICES = [
-        ('Motor', 'Motor'),
-        ('Frenos', 'Frenos'),
-        ('Suspensión', 'Suspensión'),
-        ('Eléctrico', 'Eléctrico'),
-        ('Transmisión', 'Transmisión'),
-        ('Neumáticos', 'Neumáticos'),
-        ('Diagnóstico', 'Diagnóstico Electrónico'),
-        ('Mantenimiento', 'Mantenimiento General'),
-    ]
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='perfil_mecanico')
+    
+    telefono = models.CharField(max_length=15, validators=[telefono_validador])
+    
 
-    login = models.OneToOneField(Login, on_delete=models.CASCADE)
+    marcas = models.ManyToManyField(Marca, related_name='mecanicos', blank=True)
+    
+
+    aprobado = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.nombre} ({self.especialidad})"
+
+        estado = "Aprobado" if self.aprobado else "Pendiente"
+        return f"Mecánico: {self.usuario.get_full_name()} ({estado})"
+
 
 
 class Vehiculo(models.Model):
     patente = models.CharField(max_length=45, unique=True)
-    marca = models.CharField(max_length=45)
+    marca = models.CharField(max_length=45) 
     modelo = models.CharField(max_length=45)
     año = models.IntegerField()
 
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='vehiculos')
 
     def __str__(self):
         return f"{self.marca} {self.modelo} ({self.patente})"
@@ -63,26 +65,26 @@ class Cita(models.Model):
     fecha = models.DateField()
     estado = models.CharField(max_length=45)
 
-    vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE)
+    vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, related_name='citas')
 
     def __str__(self):
         return f"Cita para {self.vehiculo.patente} el {self.fecha}"
 
 class Servicio(models.Model):
     nombre_servicio = models.CharField(max_length=45)
-    descripcion = models.CharField(max_length=45)
+    descripcion = models.CharField(max_length=255)
     costo = models.IntegerField() 
 
-    cita = models.ForeignKey(Cita, on_delete=models.CASCADE)
+    cita = models.ForeignKey(Cita, on_delete=models.CASCADE, related_name='servicios')
     
+
     mecanico = models.ForeignKey(Mecanico, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.nombre_servicio
 
 class Historial(models.Model):
-
-    detalle_trabajo = models.CharField(max_length=80)
+    detalle_trabajo = models.TextField()
     costo_final = models.CharField(max_length=45)
     fecha_realizacion = models.DateField()
 

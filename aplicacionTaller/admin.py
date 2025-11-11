@@ -1,79 +1,103 @@
 from django.contrib import admin
-from .models import Login, Cliente, Mecanico, Vehiculo, Cita, Servicio, Historial
+from django.contrib.auth.models import Group
+from .models import Marca, Cliente, Mecanico, Vehiculo, Cita, Servicio, Historial
 
-# Personalización para el modelo Login
-@admin.register(Login)
-class LoginAdmin(admin.ModelAdmin):
-    list_display = ('user', 'rol')
-    list_filter = ('rol',)
-    search_fields = ('user',)
-    list_per_page = 25
 
-# Personalización para el modelo Cliente
+@admin.action(description='Aprobar mecánicos seleccionados')
+def aprobar_mecanicos(modeladmin, request, queryset):
+    queryset.update(aprobado=True)
+    try:
+        grupo_mecanicos = Group.objects.get(name='Mecanicos')
+        for mecanico in queryset:
+            mecanico.usuario.groups.add(grupo_mecanicos)
+    except Group.DoesNotExist:
+
+        pass 
+        
+
+@admin.action(description='Desaprobar mecánicos seleccionados')
+def desaprobar_mecanicos(modeladmin, request, queryset):
+    queryset.update(aprobado=False)
+
+    try:
+        grupo_mecanicos = Group.objects.get(name='Mecanicos')
+        for mecanico in queryset:
+            mecanico.usuario.groups.remove(grupo_mecanicos)
+    except Group.DoesNotExist:
+        pass
+
+
+@admin.register(Marca)
+class MarcaAdmin(admin.ModelAdmin):
+    list_display = ('nombre',)
+    search_fields = ('nombre',)
+
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'apellido', 'email', 'telefono', 'get_login_user')
-    search_fields = ('nombre', 'apellido', 'email', 'telefono')
-    list_per_page = 25
-    
-    # Para mostrar el usuario del modelo Login relacionado
-    @admin.display(description='Usuario (Login)')
-    def get_login_user(self, obj):
-        return obj.login.user
+    list_display = ('get_username', 'get_full_name', 'telefono', 'direccion')
+    search_fields = ('usuario__username', 'usuario__first_name', 'usuario__last_name', 'telefono')
 
-# Personalización para el modelo Mecanico
+    raw_id_fields = ('usuario',)
+
+    @admin.display(description='Usuario')
+    def get_username(self, obj):
+        return obj.usuario.username
+
+    @admin.display(description='Nombre Completo')
+    def get_full_name(self, obj):
+        return obj.usuario.get_full_name()
+
 @admin.register(Mecanico)
 class MecanicoAdmin(admin.ModelAdmin):
-    # Nota: Tu modelo 'Mecanico' define 'ESPECIALIDAD_CHOICES' 
-    # pero no las usa en el campo 'especialidad'.
-    # Si quieres un desplegable, tu models.py debería tener:
-    # especialidad = models.CharField(max_length=45, choices=ESPECIALIDAD_CHOICES)
+    list_display = ('get_username', 'get_full_name', 'telefono', 'aprobado')
+    list_filter = ('aprobado', 'marcas')
+    search_fields = ('usuario__username', 'usuario__first_name', 'usuario__last_name', 'telefono')
+    raw_id_fields = ('usuario',)
     
-    list_display = ('nombre', 'especialidad', 'telefono', 'get_login_user')
-    list_filter = ('especialidad',)
-    search_fields = ('nombre', 'especialidad')
-    list_per_page = 25
 
-    # Para mostrar el usuario del modelo Login relacionado
-    @admin.display(description='Usuario (Login)')
-    def get_login_user(self, obj):
-        return obj.login.user
+    filter_horizontal = ('marcas',) 
+    
 
-# Personalización para el modelo Vehiculo
+    actions = [aprobar_mecanicos, desaprobar_mecanicos]
+
+    @admin.display(description='Usuario')
+    def get_username(self, obj):
+        return obj.usuario.username
+
+    @admin.display(description='Nombre Completo')
+    def get_full_name(self, obj):
+        return obj.usuario.get_full_name()
+
 @admin.register(Vehiculo)
 class VehiculoAdmin(admin.ModelAdmin):
     list_display = ('patente', 'marca', 'modelo', 'año', 'cliente')
-    list_filter = ('marca', 'año', 'cliente')
-    search_fields = ('patente', 'marca', 'modelo', 'cliente__nombre', 'cliente__apellido')
-    # raw_id_fields es útil si tienes muchos clientes, para no cargar un desplegable gigante
+    list_filter = ('marca', 'año', 'cliente__usuario__first_name')
+    search_fields = ('patente', 'marca', 'modelo', 'cliente__usuario__username')
     raw_id_fields = ('cliente',)
-    list_per_page = 25
 
-# Personalización para el modelo Cita
 @admin.register(Cita)
 class CitaAdmin(admin.ModelAdmin):
-    list_display = ('vehiculo', 'fecha', 'estado')
+    list_display = ('get_vehiculo_patente', 'fecha', 'estado')
     list_filter = ('estado', 'fecha')
     search_fields = ('vehiculo__patente', 'vehiculo__marca')
     raw_id_fields = ('vehiculo',)
-    date_hierarchy = 'fecha' # Añade una navegación por fechas
-    list_per_page = 25
+    date_hierarchy = 'fecha'
 
-# Personalización para el modelo Servicio
+    @admin.display(description='Vehículo (Patente)')
+    def get_vehiculo_patente(self, obj):
+        return obj.vehiculo.patente
+
 @admin.register(Servicio)
 class ServicioAdmin(admin.ModelAdmin):
     list_display = ('nombre_servicio', 'costo', 'cita', 'mecanico')
-    list_filter = ('mecanico', 'nombre_servicio')
+    list_filter = ('mecanico__usuario__first_name', 'nombre_servicio')
     search_fields = ('nombre_servicio', 'cita__vehiculo__patente')
     raw_id_fields = ('cita', 'mecanico')
-    list_per_page = 25
 
-# Personalización para el modelo Historial
 @admin.register(Historial)
 class HistorialAdmin(admin.ModelAdmin):
     list_display = ('id', 'fecha_realizacion', 'mecanico', 'costo_final')
-    list_filter = ('fecha_realizacion', 'mecanico')
-    search_fields = ('detalle_trabajo', 'mecanico__nombre')
+    list_filter = ('fecha_realizacion', 'mecanico__usuario__first_name')
+    search_fields = ('detalle_trabajo', 'mecanico__usuario__first_name')
     raw_id_fields = ('mecanico',)
     date_hierarchy = 'fecha_realizacion'
-    list_per_page = 25
