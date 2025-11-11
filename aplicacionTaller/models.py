@@ -21,7 +21,6 @@ class Cliente(models.Model):
     email = models.EmailField(max_length=60) 
     direccion = models.CharField(max_length=45)
     
-
     login = models.OneToOneField(Login, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -32,7 +31,16 @@ class Mecanico(models.Model):
     nombre = models.CharField(max_length=45)
     especialidad = models.CharField(max_length=45)
     telefono = models.IntegerField()
-    
+    ESPECIALIDAD_CHOICES = [
+        ('Motor', 'Motor'),
+        ('Frenos', 'Frenos'),
+        ('Suspensión', 'Suspensión'),
+        ('Eléctrico', 'Eléctrico'),
+        ('Transmisión', 'Transmisión'),
+        ('Neumáticos', 'Neumáticos'),
+        ('Diagnóstico', 'Diagnóstico Electrónico'),
+        ('Mantenimiento', 'Mantenimiento General'),
+    ]
 
     login = models.OneToOneField(Login, on_delete=models.CASCADE)
 
